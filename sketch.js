@@ -56,7 +56,7 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(screen_size[0], screen_size[1]);
+  cnv = createCanvas(screen_size[0], screen_size[1]);
   textAlign(CENTER);
   textFont(buttons_font)
   
@@ -77,8 +77,16 @@ function setup() {
   generate_bars_button = new Button(generate_bars_pos[0], generate_bars_pos[1], "Generate Bars", generate_bars_text_size, buttons_font, generate_bars_text_color);
 }
 
+
+function centerCanvas(){
+  let x = (windowWidth - width) / 2;
+  let y = (windowHeight - height) / 2;
+  cnv.position(x, y);
+}
+
 function draw() {
   background(255);
+  centerCanvas();
   draw_bars();
   update_bars();
   size_slider.draw();
