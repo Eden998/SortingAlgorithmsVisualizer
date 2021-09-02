@@ -13,6 +13,10 @@ Sorting Algorithms Visualizer I made with P5js library
 Project link:
 https://eden998.github.io/SortingAlgorithmsVisualizer/
 
+### Project Display
+
+![Sorting Algorithms Visualizer Gif](assets/SortingAlgorithmsVisualizer.gif)
+
 # How To Use
 
 ### Menus:
