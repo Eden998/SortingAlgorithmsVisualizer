@@ -1,7 +1,7 @@
 let bars_length;
 let bars = [];
 let bars_states = [];
-let states_colors = [[135, 206, 250], [144,238,144], [255, 0, 0], [255,215,0]];
+let states_colors = [[135, 206, 250], [144,238,144], [220,20,60], [255,215,0]];
 let bars_range = [10, 400];
 let bars_height = 100;
 let bars_width = 20;
@@ -36,26 +36,26 @@ let buttons_font;
 let quicksort_button;
 let quicksort_button_pos = [screen_size[0] / 2 - 180, 60];
 let quicksort_button_text_size = 25;
-let quicksort_button_text_color = (0, 0, 0);
+let quicksort_button_text_color = [34,139,34];
 
 // *** insertion sort button ***
 let insertionsort_button;
 let insertionsort_button_pos = [screen_size[0] / 2 - 4 , 60 - 1];
 let insertionsort_button_text_size = 25;
-let insertionsort_button_text_color = (0, 0, 0);
+let insertionsort_button_text_color = [34,139,34];
 
 // *** bubblesort button ***
 let bubblesort_button;
 let bubblesort_button_pos = [screen_size[0] / 2 + 180, 60];
 let bubblesort_button_text_size = 25;
-let bubblesort_button_text_color = (0, 0, 0);
+let bubblesort_button_text_color = [34,139,34];
 
 
 // *** Generate Bars Button ***
 let generate_bars_button;
 let generate_bars_pos = [screen_size[0] - 100, screen_size[1] - 100];
 let generate_bars_text_size = 25;
-let generate_bars_text_color = (0, 0, 0);
+let generate_bars_text_color = [34,139,34];
 
 function preload(){
   buttons_font = loadFont("assets/OpenSans-Light.ttf");
@@ -68,7 +68,7 @@ function setup() {
   
   // sliders initialization
   
-  size_slider = new Slider(size_slider_pos, size_slider_length, min_bars_length, max_bars_length, size_slider_radius, "Size:", min_bars_length, max_bars_length);
+  size_slider = new Slider(size_slider_pos, size_slider_length, min_bars_length, max_bars_length, size_slider_radius, "Size:", min_bars_length, max_bars_length, true, true);
   bars_length = size_slider.value;
   
   speed_slider = new Slider(speed_slider_pos, speed_slider_length, min_wait, max_wait, speed_slider_radius, "Sorting Speed:", "Slower", "Faster", false);
@@ -124,13 +124,16 @@ function mousePressed() {
     if (size_slider.is_clicked()){
       size_slider.clicked = true;
     }
-    if (quicksort_button.is_clicked()){
+    if (quicksort_button.is_clicked() && !is_sorted())
+    {
       active_quicksort()
     }
-    if (insertionsort_button.is_clicked()){
+    if (insertionsort_button.is_clicked() && !is_sorted())
+    {
       active_insertionsort();
     }
-    if (bubblesort_button.is_clicked()){
+    if (bubblesort_button.is_clicked() && !is_sorted())
+    {
       active_bubblesort();
     }
     if (generate_bars_button.is_clicked()){
@@ -188,7 +191,7 @@ async function quicksort(start, end){
   if (start < end){
     let pi = await partition(start, end);
     
-    await Promise.all([quicksort(start, pi - 1), quicksort(pi + 1, end)])
+    await Promise.all([quicksort(start, pi - 1), quicksort(pi + 1, end)]);
     
   }
 }
@@ -219,7 +222,7 @@ async function partition(start, end){
   for (let curr = start ; curr <= end ; curr++){
     bars[curr].state = 0;
   }
-  return i+1
+  return i+1;
 }
 
 async function active_bubblesort(){
@@ -280,6 +283,14 @@ async function insertionsort(){
   }
 }
 
+function is_sorted(){
+  for (let i = 0 ; i < bars_length - 1; i++){
+    if (bars[i].value > bars[i+1].value){
+      return false;
+    }
+  }
+  return true;
+}
 function swap_bars(i, j){
   [bars[i], bars[j]] = [bars[j], bars[i]];
   bars[i].swap(bars[j]);
