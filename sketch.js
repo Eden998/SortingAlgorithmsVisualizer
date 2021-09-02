@@ -25,8 +25,8 @@ let sliders_text_size = 20;
 let speed_slider;
 let speed_slider_pos = [screen_size[0] / 2, screen_size[1] - 50];
 let speed_slider_length = 200;
-let min_wait= 300;
-let max_wait= 30;
+let min_wait= 500;
+let max_wait= 10;
 let speed_slider_radius = 20;
 
 //  Buttons
@@ -34,13 +34,19 @@ let buttons_font;
 
 // *** quicksort button ***
 let quicksort_button;
-let quicksort_button_pos = [screen_size[0] / 2 - 120, 50];
+let quicksort_button_pos = [screen_size[0] / 2 - 180, 60];
 let quicksort_button_text_size = 25;
 let quicksort_button_text_color = (0, 0, 0);
 
+// *** insertion sort button ***
+let insertionsort_button;
+let insertionsort_button_pos = [screen_size[0] / 2 - 4 , 60 - 1];
+let insertionsort_button_text_size = 25;
+let insertionsort_button_text_color = (0, 0, 0);
+
 // *** bubblesort button ***
 let bubblesort_button;
-let bubblesort_button_pos = [screen_size[0] / 2 + 120, 50];
+let bubblesort_button_pos = [screen_size[0] / 2 + 180, 60];
 let bubblesort_button_text_size = 25;
 let bubblesort_button_text_color = (0, 0, 0);
 
@@ -70,9 +76,11 @@ function setup() {
   
   // buttons initialization
   
-  quicksort_button = new Button(quicksort_button_pos[0], quicksort_button_pos[1], "Quicksort", quicksort_button_text_size, buttons_font, quicksort_button_text_color);
+  quicksort_button = new Button(quicksort_button_pos[0], quicksort_button_pos[1], "Quick Sort", quicksort_button_text_size, buttons_font, quicksort_button_text_color);
   
-  bubblesort_button = new Button(bubblesort_button_pos[0], bubblesort_button_pos[1], "Bubblesort", bubblesort_button_text_size, buttons_font, bubblesort_button_text_color);
+  insertionsort_button = new Button(insertionsort_button_pos[0], insertionsort_button_pos[1], "Insertion Sort", insertionsort_button_text_size, buttons_font, insertionsort_button_text_color);
+  
+  bubblesort_button = new Button(bubblesort_button_pos[0], bubblesort_button_pos[1], "Bubble Sort", bubblesort_button_text_size, buttons_font, bubblesort_button_text_color);
   
   generate_bars_button = new Button(generate_bars_pos[0], generate_bars_pos[1], "Generate Bars", generate_bars_text_size, buttons_font, generate_bars_text_color);
 }
@@ -94,6 +102,7 @@ function draw() {
   speed_slider.draw();
   speed_slider.update();
   quicksort_button.draw();
+  insertionsort_button.draw();
   bubblesort_button.draw();
   generate_bars_button.draw();
   check_size_slider_change();
@@ -110,11 +119,6 @@ function generate_bars() {
   }
 }
 
-function mouseClicked() {
-  //quicksort(0, bars.length - 1);
-  //bubblesort();
-}
-
 function mousePressed() {
   if (!sorting){
     if (size_slider.is_clicked()){
@@ -122,6 +126,9 @@ function mousePressed() {
     }
     if (quicksort_button.is_clicked()){
       active_quicksort()
+    }
+    if (insertionsort_button.is_clicked()){
+      active_insertionsort();
     }
     if (bubblesort_button.is_clicked()){
       active_bubblesort();
@@ -142,7 +149,14 @@ function mouseReleased(){
 
 function draw_bars() {
   for (let i = 0; i < bars_length; i++) {
-    bars[i].draw();
+    if (bars[i].state != 2){
+      bars[i].draw();
+    }
+  }
+  for (let i = 0; i < bars_length; i++) {
+    if (bars[i].state == 2){
+      bars[i].draw();
+    }
   }
 }
 
@@ -174,7 +188,7 @@ async function quicksort(start, end){
   if (start < end){
     let pi = await partition(start, end);
     
-    Promise.all([quicksort(start, pi - 1), quicksort(pi + 1, end)])
+    await Promise.all([quicksort(start, pi - 1), quicksort(pi + 1, end)])
     
   }
 }
@@ -235,10 +249,42 @@ async function bubblesort(){
   }
 }
 
+async function active_insertionsort(){
+  sorting = true;
+  await insertionsort();
+  sorting = false;
+}
+
+async function insertionsort(){
+  for(let i = 1; i < bars_length; i++){
+    let curr_key = bars[i].value;
+    let j = i - 1;
+    
+    bars[i].state = 2;
+    
+    for(let curr = 0 ; curr < i ; curr++){
+      bars[curr].state = 1;
+    }
+    
+    await sleep(sleep_time)
+    
+    while (j >= 0 && curr_key < bars[j].value){
+      swap_bars(j, j+1);
+      await sleep(sleep_time);
+      j--;
+    }
+    
+    for(let curr = 0 ; curr <= i ; curr++){
+      bars[curr].state = 0;
+    }
+  }
+}
+
 function swap_bars(i, j){
   [bars[i], bars[j]] = [bars[j], bars[i]];
   bars[i].swap(bars[j]);
 }
+
 function sleep(millisecondsDuration) {
   return new Promise((resolve) => {
     setTimeout(resolve, millisecondsDuration);
