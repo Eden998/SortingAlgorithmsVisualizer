@@ -14,26 +14,40 @@ class Button{
     this.text_height_from_mid = this.text_rect.h / 2 + this.boundary / 2;
     this.mouse_hover = false;
     this.rect_curve = 10;
+    this.sorting_block_color = [220,20,60];
   }
   
   draw(){
+    let fade;
+    if (sorting){
+      fade = 128;
+    }
+    else{
+      fade = 255;
+    }
     this.update_hover();
-    stroke(this.color)
+    stroke(0, 0, 0, fade)
     strokeWeight(3)
     rectMode(CENTER);
     textSize(this.text_size)
     if (this.mouse_hover){
-      fill(this.color)
+      if (sorting){
+        fill(this.sorting_block_color[0], this.sorting_block_color[1],this.sorting_block_color[2],fade);
+      }
+      else{
+        fill(this.color[0], this.color[1], this.color[2], fade);
+      }
+      
       rect(this.text_rect.x + this.text_rect.w / 2, this.text_rect.y + this.text_rect.h / 2, this.text_rect.w + this.boundary, this.text_rect.h + this.boundary, this.rect_curve);
-      strokeWeight(0)
-      fill(255)
+      strokeWeight(0);
+      fill(255);
       text(this.text, this.pos[0], this.pos[1]);
     }
     else{
-      fill(255)
+      fill(255);
       rect(this.text_rect.x + this.text_rect.w / 2, this.text_rect.y + this.text_rect.h / 2, this.text_rect.w + this.boundary, this.text_rect.h + this.boundary, this.rect_curve);
-      strokeWeight(0)
-      fill(this.color)
+      strokeWeight(0);
+      fill(0, 0, 0, fade);
       text(this.text, this.pos[0], this.pos[1]);
     }
   }
