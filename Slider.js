@@ -1,5 +1,5 @@
 class Slider{
-  constructor(pos, length, min_val, max_val, size_slider_radius, slider_label, left_label, right_label, show_value = true){
+  constructor(pos, length, min_val, max_val, size_slider_radius, slider_label, left_label, right_label, show_value = true, sorting_block = false){
     
     // Slider Visual:
     this.pos = createVector(pos[0], pos[1]);
@@ -13,7 +13,8 @@ class Slider{
     this.min_val = min_val;
     this.max_val = max_val;
     this.value = floor((min_val + max_val) / 2)
-    
+    this.sorting_block = sorting_block;
+    this.sorting_block_color = [220,20,60];
     
     // slider texts
     this.slider_label = slider_label;
@@ -35,7 +36,12 @@ class Slider{
     line(this.pos.x - this.length / 2, this.pos.y, this.pos.x + this.length / 2, this.pos.y);
     //drawing button
     stroke(2);
-    fill(135, 206, 250);
+    if (this.sorting_block && sorting){
+      fill(this.sorting_block_color)
+    }
+    else{
+      fill(135, 206, 250);
+    }
     circle(this.button_pos.x, this.button_pos.y, this.button_radius);
     textSize(sliders_text_size);
     strokeWeight(0.8)
