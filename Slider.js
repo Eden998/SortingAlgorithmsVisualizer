@@ -1,5 +1,5 @@
 class Slider{
-  constructor(pos, length, min_val, max_val, size_slider_radius, slider_name, left_label, right_label, show_value = true){
+  constructor(pos, length, min_val, max_val, size_slider_radius, slider_label, left_label, right_label, show_value = true){
     
     // Slider Visual:
     this.pos = createVector(pos[0], pos[1]);
@@ -16,7 +16,8 @@ class Slider{
     
     
     // slider texts
-    this.slider_name = slider_name;
+    this.slider_label = slider_label;
+    this.slider_label_width = buttons_font.textBounds(str(this.slider_label), this.pos.x, this.pos.y, sliders_text_size).w;
     this.left_label = left_label;
     this.right_label = right_label;
     this.left_label_width = buttons_font.textBounds(str(this.left_label), this.pos.x, this.pos.y, sliders_text_size).w;
@@ -37,9 +38,14 @@ class Slider{
     fill(135, 206, 250);
     circle(this.button_pos.x, this.button_pos.y, this.button_radius);
     textSize(sliders_text_size);
-    strokeWeight(0)
+    strokeWeight(0.8)
     fill(0);
     textAlign(CENTER)
+
+    text(this.slider_label, this.pos.x - this.length / 2 - this.left_label_width - this.edge_values_offset * 2 - this.slider_label_width / 2, this.pos.y + this.edge_values_y_fix)    
+    
+    strokeWeight(0)
+    
     text(this.left_label, this.pos.x - this.length / 2 - this.edge_values_offset - this.left_label_width / 2, this.pos.y + this.edge_values_y_fix)
     text(this.right_label, this.pos.x + this.length / 2 + this.edge_values_offset + this.right_label_width / 2, this.pos.y + this.edge_values_y_fix)
     if (this.show_value){
