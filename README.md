@@ -4,7 +4,7 @@ Eden Yosef
 
 Language: Javascript
 
-Tools: P5js, Asyncronous programming
+Tools: P5js, Asynchronous  programming
 
 Sorting Algorithms Visualizer I made with P5js library
 
